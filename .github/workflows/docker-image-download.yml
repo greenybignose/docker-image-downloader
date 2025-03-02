@@ -18,7 +18,6 @@ jobs:
           sudo sed -i 's|ExecStart=/usr/bin/dockerd|ExecStart=/usr/bin/dockerd --data-root=/mnt/docker-storage|' /lib/systemd/system/docker.service
           sudo systemctl daemon-reload
           sudo systemctl start docker
-
           docker pull greenybignose/kali-last-release5:latest
           docker save -o /my_image.tar kalilinux/kali-linux-headless:latest
     
