@@ -1,4 +1,4 @@
-name: Pull Docker Image and Upload 1
+name: Pull Docker Image and Upload
 
 on:  
   workflow_dispatch:  # Allows you to trigger manually
