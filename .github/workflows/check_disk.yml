@@ -1,0 +1,10 @@
+name: Check Disk Space
+
+on: workflow_dispatch  # Allows manual trigger
+
+jobs:
+  check-disk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Disk Space
+        run: df -h /
