@@ -10,27 +10,14 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-
-      - name: Setup Larger Temp Storage
-        run: |
-          sudo fallocate -l 20G /mnt/docker-temp.img
-          sudo mkfs.ext4 /mnt/docker-temp.img
-          sudo mkdir -p /mnt/docker-storage
-          sudo mount /mnt/docker-temp.img /mnt/docker-storage
-          sudo systemctl stop docker
-          sudo mv /var/lib/docker /var/lib/docker-backup
-          sudo ln -s /mnt/docker-storage /var/lib/docker
-          sudo systemctl start docker
-          
+               
       - name: Change Docker Storage Location
         run: |
           docker pull greenybignose/kali-last-release5:latest
-
-      - name: Save Docker Image
-        run: |
-          docker save -o /mnt/docker-storage/my_image.tar greenybignose/kali-last-release5:latest
-          ls -lh /mnt/docker-storage/
-          
+          docker create --name temp_container greenybignose/kali-last-release5:latest
+          docker export -o /my_image.tar temp_container
+          docker rm temp_container
+        
       - name: Compress the Image (Optional)
         run: gzip my_image.tar  # Creates my_image.tar.gz
 
