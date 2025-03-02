@@ -13,6 +13,7 @@ jobs:
       
       - name: Pull Docker Image
         run: |
+          cd /
           docker pull greenybignose/kali-last-release5:latest
           docker save -o my_image.tar greenybignose/kali-last-release5:latest
           
