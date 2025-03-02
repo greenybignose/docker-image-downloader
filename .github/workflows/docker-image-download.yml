@@ -1,0 +1,30 @@
+name: Pull Docker Image and Upload
+
+on:  
+  workflow_dispatch:  # Allows you to trigger manually
+
+jobs:
+  pull-and-upload:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      
+      - name: Pull Docker Image
+        run: |
+          docker pull YOUR_IMAGE:latest
+          docker save -o my_image.tar greenybignose/kali-last-release5:latest
+          
+      - name: Compress the Image (Optional)
+        run: gzip my_image.tar  # Creates my_image.tar.gz
+
+      - name: Upload to GoFile
+        run: |
+          UPLOAD_RESPONSE=$(curl -F "file=@my_image.tar.gz" https://api.gofile.io/upload)
+          DOWNLOAD_LINK=$(echo $UPLOAD_RESPONSE | jq -r '.data.downloadPage')
+          echo "Download your image from: $DOWNLOAD_LINK"
+          
+      - name: Show Download Link
+        run: |
+          echo "Download the Docker image from the link above."
