@@ -11,14 +11,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       
-      - name: Pull Docker Image
+      - name: Change Docker Storage Location
         run: |
-          cd /
+          sudo systemctl stop docker
+          sudo mkdir -p /mnt/docker-storage
+          sudo sed -i 's|ExecStart=/usr/bin/dockerd|ExecStart=/usr/bin/dockerd --data-root=/mnt/docker-storage|' /lib/systemd/system/docker.service
+          sudo systemctl daemon-reload
+          sudo systemctl start docker
+
           docker pull greenybignose/kali-last-release5:latest
-          docker create --name temp_container greenybignose/kali-last-release5:latest
-          docker export -o /my_image.tar temp_container
-          docker rm temp_container    
-          
+          docker save -o /my_image.tar kalilinux/kali-linux-headless:latest
+    
       - name: Compress the Image (Optional)
         run: gzip my_image.tar  # Creates my_image.tar.gz
 
