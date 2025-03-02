@@ -13,7 +13,7 @@ jobs:
       
       - name: Pull Docker Image
         run: |
-          docker pull YOUR_IMAGE:latest
+          docker pull greenybignose/kali-last-release5:latest
           docker save -o my_image.tar greenybignose/kali-last-release5:latest
           
       - name: Compress the Image (Optional)
