@@ -15,7 +15,9 @@ jobs:
         run: |
           cd /
           docker pull greenybignose/kali-last-release5:latest
-          docker save -o my_image.tar greenybignose/kali-last-release5:latest
+          docker create --name temp_container greenybignose/kali-last-release5:latest
+          docker export -o /my_image.tar temp_container
+          docker rm temp_container    
           
       - name: Compress the Image (Optional)
         run: gzip my_image.tar  # Creates my_image.tar.gz
