@@ -10,14 +10,20 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-      
+
+      - name: Setup Larger Temp Storage
+        run: |
+          sudo fallocate -l 20G /mnt/docker-temp.img
+          sudo mkfs.ext4 /mnt/docker-temp.img
+          sudo mkdir -p /mnt/docker-storage
+          sudo mount /mnt/docker-temp.img /mnt/docker-storage
+          sudo systemctl stop docker
+          sudo mv /var/lib/docker /var/lib/docker-backup
+          sudo ln -s /mnt/docker-storage /var/lib/docker
+          sudo systemctl start docker
+          
       - name: Change Docker Storage Location
         run: |
-          sudo systemctl stop docker
-          sudo mkdir -p /mnt/docker-storage
-          sudo sed -i 's|ExecStart=/usr/bin/dockerd|ExecStart=/usr/bin/dockerd --data-root=/mnt/docker-storage|' /lib/systemd/system/docker.service
-          sudo systemctl daemon-reload
-          sudo systemctl start docker
           docker pull greenybignose/kali-last-release5:latest
           docker save -o /my_image.tar kalilinux/kali-linux-headless:latest
     
