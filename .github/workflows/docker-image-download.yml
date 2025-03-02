@@ -25,8 +25,12 @@ jobs:
       - name: Change Docker Storage Location
         run: |
           docker pull greenybignose/kali-last-release5:latest
-          docker save -o /my_image.tar kalilinux/kali-linux-headless:latest
-    
+
+      - name: Save Docker Image
+        run: |
+          docker save -o /mnt/docker-storage/my_image.tar greenybignose/kali-last-release5:latest
+          ls -lh /mnt/docker-storage/
+          
       - name: Compress the Image (Optional)
         run: gzip my_image.tar  # Creates my_image.tar.gz
 
